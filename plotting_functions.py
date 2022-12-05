@@ -116,6 +116,35 @@ def deviation(arrays):
 
 
 ################## Ploting ##################
+def plot_filtered_protein_Golgi(time_array,protein_array,step,title):
+    flat_time = [item for sublist in time_array for item in sublist]
+    mean_line=mean(protein_array)
+
+    mean_time=np.arange(min(flat_time), len(mean_line)*step+step,step)
+    #print('Mean')
+    #print(mean_line)
+    #print(mean_time)
+
+    fig = plt.figure()
+    ax = fig.gca()
+    #ax.set_xticks(np.arange(0, xlim_time, 1))
+    ax.set_yticks(np.arange(0, 1.1, 0.1))
+    plt.grid()
+
+    for array in range(len(protein_array)):
+        plt.scatter(time_array[array], protein_array[array], alpha=0.1, color='blue')
+
+    plt.plot(mean_time, mean_line, color='black')
+
+    # Add title and axis names
+    plt.title(title)
+    plt.xlabel('Time (min)')
+    plt.ylabel('Mean Fluorescence Intensity (MFI)')
+    plt.ylim(0, 1.05)
+    #plt.xlim(8*step, xmaxtick)
+    # Showing plot adding grid
+    plt.show()
+
 
 def plot_filtered_protein_ER(ER_time_array,ER_array,xlim_time,step,title, xmaxtick):
     flat_time = [item for sublist in ER_time_array for item in sublist]

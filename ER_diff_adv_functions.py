@@ -61,7 +61,7 @@ def golgi_intra_transport(solution, A):
         t=t+Dt
         cnt=cnt+1
         A[1:Lx-1]=A[0:Lx-2]
-        Jon=0.3
+        Jon= 0 #0.3
         A[0]=Jon #%Jon;
         k=0
         for k  in range(1,int(N)):
@@ -108,7 +108,7 @@ def generate_population(population_size):
 # In[5]:
 
 
-def start(population_size, desired_output, generations_size, top_percentage):
+def start_ER(population_size, desired_output, generations_size, top_percentage, plot_TF=True):
     population = generate_population(population_size)
     pop_error = []
 
@@ -127,13 +127,13 @@ def start(population_size, desired_output, generations_size, top_percentage):
             new_population.append(child)
         population = new_population
 
-    (best_specimen, best_specimen_error)=_show_best_specimen(population, pop_error, desired_output)
+    (best_specimen, best_specimen_error)=_show_best_specimen(population, pop_error, desired_output, plot_TF)
     return (best_specimen, best_specimen_error)
 
 # In[6]:
 
 
-def _show_best_specimen(population, pop_error, desired_output):
+def _show_best_specimen(population, pop_error, desired_output,plot_TF):
     best_specimen = fitness(population, pop_error)[0]
     best_specimen_error = f_error(best_specimen, desired_output)
 
@@ -143,10 +143,11 @@ def _show_best_specimen(population, pop_error, desired_output):
     A = desired_output.copy()
     output=golgi_intra_transport(best_specimen, A)
 
-    # Plotting
-    plt.plot(output, 'r')
-    plt.plot(desired_output, 'b')
-    plt.show()
+    if plot_TF == True: 
+        # Plotting
+        plt.plot(output, 'r')
+        plt.plot(desired_output, 'b')
+        plt.show()
 
     return (best_specimen, best_specimen_error)
 

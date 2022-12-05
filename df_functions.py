@@ -80,7 +80,7 @@ def filtering_ER(ER_time,ER_MFI,min,max,trh):
 
 def filtering_Golgi(ER_time,ER_MFI,min,max,trh):
     empty_ER_array=[]
-
+    idx_saved_proteins =[]
     empty_ERtime_array = []
     xlim_list=[]
     cnt=0
@@ -92,7 +92,7 @@ def filtering_Golgi(ER_time,ER_MFI,min,max,trh):
         minpos = np.argmin(sample[min:max])
         maxpos = np.argmax(sample[min:max])
 
-        print(sample[maxpos:minpos])
+        #print(sample[maxpos:minpos])
         if len(sample[maxpos:minpos])>0:
             if sample[minpos] < trh and np.amax(sample[:minpos][-20:]) < np.amax(sample[min:max]):
                 # print(sample[minpos])
@@ -101,13 +101,15 @@ def filtering_Golgi(ER_time,ER_MFI,min,max,trh):
                 empty_ER_array.append(sample[0:minpos + 1])
                 empty_ERtime_array.append(ER_time_array[0:minpos + 1])
                 xlim_list.append(ER_time_array[minpos + 1])
+                idx_saved_proteins.append(cnt)
                 # print(ER_time_array[max])
 
         #else:
             #print(sample[minpos])
             #print(column)
             #print(minpos)
+        cnt=cnt+1
 
     xlim_max=np.amax(xlim_list)
-    return empty_ERtime_array,empty_ER_array,xlim_max
+    return (empty_ERtime_array,empty_ER_array,xlim_max,idx_saved_proteins)
 
