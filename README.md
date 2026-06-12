@@ -17,7 +17,7 @@ The repository no longer depends on specific protein labels, experimental file p
 From `Diffusion Advection Numerical Solution/`:
 
 ```powershell
-c:/Users/Clinical_AI/Documents/GitHub/Cellport/.venv/Scripts/python.exe run_simulation.py
+python run_simulation.py
 ```
 
 This script generates:
@@ -36,6 +36,20 @@ The `Results/` directory contains the main visual outputs:
 - a model fit comparison plot with inferred diffusion, velocity, and decay parameters
 
 These figures illustrate how the anonymized model behaves and how the fitted model tracks the generated data.
+
+Inline preview of generated plots (stored under `Diffusion Advection Numerical Solution/Results/`):
+
+![Simulation curves](Diffusion%20Advection%20Numerical%20Solution/Results/simulation_curves.png)
+
+*Figure: Multiple anonymized synthetic series with mean and ±1 std band.*
+
+![Signal distribution](Diffusion%20Advection%20Numerical%20Solution/Results/signal_distribution.png)
+
+*Figure: Distribution of anonymized synthetic signal values.*
+
+![Mean vs fit](Diffusion%20Advection%20Numerical%20Solution/Results/mean_fit_comparison.png)
+
+*Figure: Mean synthetic signal compared to the fitted diffusion-advection model.*
 
 ## Notes
 

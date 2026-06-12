@@ -1,14 +1,38 @@
 from pathlib import Path
 
-path = Path('Data preparation classificaion TAG1-Copy1.ipynb')
-text = path.read_text(encoding='utf-8')
+import json
+
+base = Path('.')
+notebooks = list(base.glob('*.ipynb')) + list(base.glob('Cargo Segmentation/*.ipynb'))
 replacements = {
-    "dir_name='C:/Users/utraf/Desktop/16022022_RUSH MDCK EGFP_GPIFRa_50k_D5P5_500uMConsBiot/NATHALY/'": "dir_name='path/to/image_data/'",
-    "filename = 'RUSH MDCK EGFP_GPIFRa_50k_D5P5_500uMConsBiot_60x1_t1.tif'": "filename = 'sample_image.tif'",
-    "C:\\Users\\utraf\\AppData\\Local\\Temp\\ipykernel_20180\\3922955033.py:3: DeprecationWarning: <tifffile.imsave> is deprecated. Use tifffile.imwrite\\n": "C:\\Users\\<anon>\\AppData\\Local\\Temp\\kernel.py:3: DeprecationWarning: <tifffile.imsave> is deprecated. Use tifffile.imwrite\\n"
+    "C:/Users/utraf": "C:/Users/<anon>",
+    "C:\\Users\\utraf": "C:\\Users\\<anon>",
+    "Clinical_AI": "<anon>",
 }
-for old, new in replacements.items():
-    if old not in text:
-        print('Missing:', old)
-path.write_text(text, encoding='utf-8')
+
+def sanitize_notebook(path: Path):
+    try:
+        nb = json.loads(path.read_text(encoding='utf-8'))
+    except Exception:
+        print('Skipping (not valid JSON):', path)
+        return
+    # Clear outputs and execution counts
+    for cell in nb.get('cells', []):
+        if isinstance(cell, dict):
+            cell['outputs'] = []
+            cell['execution_count'] = None
+            # sanitize source lines
+            if 'source' in cell:
+                cell['source'] = [s.replace(k, v) for s in cell['source'] for k, v in replacements.items()]
+    # Minimal metadata
+    nb['metadata'] = {}
+    content = json.dumps(nb, ensure_ascii=False, indent=1)
+    for old, new in replacements.items():
+        content = content.replace(old, new)
+    path.write_text(content, encoding='utf-8')
+    print('Sanitized:', path)
+
+for nb_path in notebooks:
+    sanitize_notebook(Path(nb_path))
+
 print('Done.')
